@@ -1,15 +1,39 @@
+using LibraryAPI.Core.Interfaces;
+using LibraryAPI.Infrastructure.Context;
+using LibraryAPI.Infrastructure.Repositories;
+using LibraryAPI.Presentation.Mappings;
+using LibraryAPI.Services;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+
+var connStr = builder.Configuration.GetConnectionString("DefaultConnection");
+
+builder.Services.AddDbContext<LibraryDbContext>(options =>
+    options
+      .UseMySql(connStr, new MySqlServerVersion(new Version(8, 0, 28)))
+      .EnableSensitiveDataLogging()
+      .LogTo(Console.WriteLine)
+);
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddAutoMapper(typeof(BookProfile),
+                               typeof(AuthorProfile),
+                               typeof(LoanProfile));
+
+builder.Services.AddScoped<IBookService, BookService>();
+builder.Services.AddScoped<ILoanService, LoanService>();
+builder.Services.AddScoped<IBookRepository, BookRepository>();
+builder.Services.AddScoped<ILoanRepository, LoanRepository>();
+builder.Services.AddScoped<IAuthorService, AuthorService>();
+builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -17,9 +41,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();
