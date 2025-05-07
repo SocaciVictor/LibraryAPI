@@ -41,5 +41,6 @@ namespace LibraryAPI.Infrastructure.Context
         public DbSet<BookDb> Books { get; set; }
         public DbSet<AuthorDb> Authors { get; set; }
         public DbSet<LoanDb> Loans { get; set; }
+        public DbSet<UserDb> Users { get; set; }
     }
 }
