@@ -10,6 +10,8 @@ namespace LibraryAPI.Presentation.Mappings
         public LoanProfile()
         {
             CreateMap<LoanDto, Loan>();
+            CreateMap<LoanRequestDto, Loan>();
+            CreateMap<Loan, LoanRequestDto>();
             CreateMap<Loan, LoanDto>();
             CreateMap<Loan, LoanDb>();
             CreateMap<LoanDb, Loan>();
