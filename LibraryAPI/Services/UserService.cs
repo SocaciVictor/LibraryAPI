@@ -49,6 +49,11 @@ namespace LibraryAPI.Services
             return result;
         }
 
+        public async Task<List<User>> GetAllAsync()
+        {
+            return await _userRepository.GetAllAsync();
+        }
+
         public async Task<User?> GetByIdAsync(int id)
         {
             return await _userRepository.GetByIdAsync(id);

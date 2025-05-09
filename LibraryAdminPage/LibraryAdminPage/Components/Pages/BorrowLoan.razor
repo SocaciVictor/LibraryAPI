@@ -1,0 +1,38 @@
+﻿@page "/loans/borrow"
+@using LibraryAdminPage.Components.Models
+@inject LibraryAdminPage.Components.Interfaces.ILoanService LoanService
+@inject NavigationManager Nav
+
+<h3>Borrow a Book</h3>
+
+<EditForm Model="model" OnValidSubmit="HandleBorrow">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-3">
+        <label>BookId</label>
+        <InputNumber class="form-control" @bind-Value="model.BookId" />
+    </div>
+    <div class="mb-3">
+        <label>UserId</label>
+        <InputNumber class="form-control" @bind-Value="model.UserId" />
+    </div>
+
+    <button type="submit" class="btn btn-success">Borrow</button>
+    <button type="button" class="btn btn-secondary ms-2"
+            @onclick='() => Nav.NavigateTo("/")'>
+        Cancel
+    </button>
+</EditForm>
+
+@code {
+    // folosim object initializer, nu new(0,0)
+    private LoanRequestDto model = new() { BookId = 0, UserId = 0 };
+
+    private async Task HandleBorrow()
+    {
+        var loan = await LoanService.BorrowAsync(model);
+        if (loan is not null)
+            Nav.NavigateTo($"/loans/{loan.Id}");
+    }
+}

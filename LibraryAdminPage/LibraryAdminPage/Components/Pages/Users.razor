@@ -1,0 +1,48 @@
+﻿@page "/users"
+@using LibraryAdminPage.Components.Models
+@inject LibraryAdminPage.Components.Interfaces.IUserService UserService
+@inject NavigationManager Nav
+
+<h3>Users</h3>
+<NavLink class="btn btn-primary mb-3" href ="@("/users/edit")">
+  New User
+</NavLink>
+
+@if (users is null)
+{
+  <p><em>Loading…</em></p>
+}
+else
+{
+  <table class="table">
+    <thead><tr><th>Id</th><th>Name</th><th></th></tr></thead>
+    <tbody>
+      @foreach (var u in users)
+      {
+        <tr>
+          <td>@u.Id</td><td>@u.Name</td>
+          <td>
+                        <NavLink class="btn btn-sm btn-secondary me-1"
+                                 href="@($"/users/edit/{u.Id}")">
+                            Edit
+                        </NavLink>
+            <button class="btn btn-sm btn-danger"
+                    @onclick="() => Delete(u.Id)">Delete</button>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}
+
+@code {
+  List<UserDto>? users;
+  protected override async Task OnInitializedAsync()
+    => users = await UserService.GetAllAsync();
+
+  async Task Delete(int id)
+  {
+    if (await UserService.DeleteAsync(id))
+      users = await UserService.GetAllAsync();
+  }
+}

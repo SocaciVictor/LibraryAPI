@@ -26,9 +26,11 @@ namespace LibraryAPI.Presentation.Controllers
         /// </summary>
         [HttpGet]
         [ProducesResponseType(typeof(List<UserDto>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<List<UserDto>>> GetAll([FromQuery] string name)
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetAll()
         {
-            var list = await _svc.GetByNameAsync(name);
+            var list = await _svc.GetAllAsync();
+            
             return Ok(_mapper.Map<List<UserDto>>(list));
         }
 

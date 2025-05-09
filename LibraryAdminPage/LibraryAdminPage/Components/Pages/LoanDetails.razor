@@ -1,0 +1,42 @@
+﻿@page "/loans/{Id:int}"
+@using LibraryAdminPage.Components.Models
+@inject LibraryAdminPage.Components.Interfaces.ILoanService LoanService
+@inject NavigationManager Nav
+
+<h3>Loan Details</h3>
+
+@if (loan is null)
+{
+  <p><em>Loading…</em></p>
+}
+else
+{
+  <dl class="row">
+    <dt class="col-sm-2">Id</dt><dd class="col-sm-10">@loan.Id</dd>
+    <dt class="col-sm-2">BookId</dt><dd class="col-sm-10">@loan.BookId</dd>
+    <dt class="col-sm-2">UserId</dt><dd class="col-sm-10">@loan.UserId</dd>
+    <dt class="col-sm-2">Loaned At</dt><dd class="col-sm-10">@loan.LoanedAt</dd>
+    <dt class="col-sm-2">Returned At</dt>
+      <dd class="col-sm-10">@((loan.ReturnedAt?.ToString()!) ?? "—")</dd>
+  </dl>
+
+  @if (loan.ReturnedAt is null)
+  {
+    <button class="btn btn-warning" @onclick="HandleReturn">Return Book</button>
+  }
+  <button class="btn btn-secondary ms-2" @onclick='() => Nav.NavigateTo("/")'>Home</button>
+}
+
+@code {
+  [Parameter] public int Id { get; set; }
+  LoanDto? loan;
+
+  protected override async Task OnInitializedAsync()
+    => loan = await LoanService.GetByIdAsync(Id);
+
+  async Task HandleReturn()
+  {
+    if (await LoanService.ReturnAsync(Id))
+      loan = await LoanService.GetByIdAsync(Id);
+  }
+}

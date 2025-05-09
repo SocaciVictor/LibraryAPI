@@ -1,0 +1,142 @@
+﻿@page "/books/edit/{Id:int?}"
+@using LibraryAdminPage.Components.Models
+@inject LibraryAdminPage.Components.Interfaces.IBookService BookService
+@inject LibraryAdminPage.Components.Interfaces.IAuthorService AuthorService
+@inject NavigationManager Nav
+
+<h3>@(Id.HasValue ? "Edit Book" : "Create Book")</h3>
+
+@if (Id.HasValue)
+{
+    <!-- ==== FORMULAR EDIT ==== -->
+    <EditForm Model="updateModel" OnValidSubmit="HandleUpdate">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="mb-3">
+            <label>Title</label>
+            <InputText class="form-control" @bind-Value="updateModel.Title" />
+        </div>
+        <div class="mb-3">
+            <label>Author Name</label>
+            <InputNumber class="form-control" @bind-Value="updateModel.AuthorId" />
+        </div>
+        <div class="mb-3">
+            <label>Quantity</label>
+            <InputNumber class="form-control" @bind-Value="updateModel.Quantity" />
+        </div>
+        <div class="mb-3">
+            <label>Published Date</label>
+            <InputDate class="form-control" @bind-Value="updateModel.PublishedDate" />
+        </div>
+
+        <button type="submit" class="btn btn-success">Save</button>
+        <NavLink type="button" class="btn btn-secondary ms-2"
+                href="@("/books")">
+            Cancel
+        </NavLink>
+    </EditForm>
+}
+else
+{
+    <!-- ==== FORMULAR CREATE ==== -->
+    <EditForm Model="createModel" OnValidSubmit="HandleCreate">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="mb-3">
+            <label>Title</label>
+            <InputText class="form-control" @bind-Value="createModel.Title" />
+        </div>
+        <div class="mb-3">
+            <label>AuthorId</label>
+            <InputNumber class="form-control" @bind-Value="createModel.AuthorId" />
+        </div>
+        <div class="mb-3">
+            <label>Quantity</label>
+            <InputNumber class="form-control" @bind-Value="createModel.Quantity" />
+        </div>
+        <div class="mb-3">
+            <label>Published Date</label>
+            <InputDate class="form-control" @bind-Value="createModel.PublishedDate" />
+        </div>
+
+        <button type="submit" class="btn btn-success">Create</button>
+        <NavLink type="button" class="btn btn-secondary ms-2"
+                 href="@("/books")">
+            Cancel
+        </NavLink>
+    </EditForm>
+}
+
+@code {
+    [Parameter] public int? Id { get; set; }
+
+    // DTO-ul de creare conform API-ului :contentReference[oaicite:2]{index=2}:contentReference[oaicite:3]{index=3}
+    private CreateBookDto createModel = new()
+        {
+            Title = "",
+            AuthorId = 0,
+            Quantity = 0,
+            PublishedDate = DateTime.Today
+        };
+
+    // DTO-ul de actualizare conform API-ului :contentReference[oaicite:4]{index=4}:contentReference[oaicite:5]{index=5}
+    private UpdateBookDto updateModel = new()
+        {
+            Title = "",
+            AuthorId = 0,
+            Quantity = 0,
+            PublishedDate = DateTime.Today
+        };
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Id.HasValue)
+        {
+            // 1) Preluăm cartea
+            var dto = await BookService.GetByIdAsync(Id.Value);
+            if (dto is null)
+            {
+                Nav.NavigateTo("/books");
+                return;
+            }
+
+            // 2) Populăm createModel doar ca fallback (nu este folosit în edit)
+            createModel = new()
+                {
+                    Title = dto.Title,
+                    AuthorId = dto.AuthorId,
+                    Quantity = dto.Quantity,
+                    PublishedDate = DateTime.Today
+                };
+
+            // 3) Preluăm numele autorului după AuthorId
+            var author = await AuthorService.GetByIdAsync(dto.AuthorId);
+
+            // 4) Populăm modelul de update
+            updateModel = new()
+                {
+                    Title = dto.Title,
+                    AuthorId = author.Id,
+                    Quantity = dto.Quantity,
+                    PublishedDate = DateTime.Today
+                };
+        }
+    }
+
+    private async Task HandleCreate()
+    {
+        await BookService.CreateAsync(createModel);
+        Nav.NavigateTo("/books");
+    }
+
+    private async Task HandleUpdate()
+    {
+        if (Id.HasValue)
+        {
+            await BookService.UpdateAsync(Id.Value, updateModel);
+        }
+        Nav.NavigateTo("/books");
+    }
+}
