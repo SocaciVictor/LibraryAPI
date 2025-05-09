@@ -1,68 +1,142 @@
+/* Culori principale */
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  --bg-color: #f4f1ea; /* crem deschis */
+  --text-color: #333333; /* gri închis */
+  --accent-color: #8b5e3c; /* maro lemn */
+  --accent-light: #c49e71; /* maro deschis */
+  --card-bg: #ffffff; /* alb pentru carduri */
+  --card-border: #e0d7ca; /* crem foarte pal */
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
+/* Reset & body */
+* {
+  box-sizing: border-box;
   margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
+  padding: 0;
+}
+body {
+  font-family: "Georgia", serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  line-height: 1.6;
   min-height: 100vh;
+  padding: 2rem;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+/* Container central */
+#root {
+  max-width: 1000px;
+  margin: 0 auto;
 }
 
+/* Titluri */
+h1,
+h2 {
+  color: var(--accent-color);
+  margin-bottom: 1rem;
+}
+h2 {
+  border-bottom: 2px solid var(--accent-light);
+  padding-bottom: 0.5rem;
+}
+
+/* Nav */
+nav {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+nav a {
+  text-decoration: none;
+  color: var(--accent-color);
+  font-weight: bold;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+nav a.active,
+nav a:hover {
+  background-color: var(--accent-light);
+  color: #fff;
+}
+
+/* Butoane */
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
+  background-color: var(--accent-color);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
   padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
+  font-size: 1rem;
   cursor: pointer;
-  transition: border-color 0.25s;
+  transition: background-color 0.2s, transform 0.1s;
 }
 button:hover {
-  border-color: #646cff;
+  background-color: var(--accent-light);
+  transform: translateY(-1px);
 }
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+/* Listări & carduri */
+ul {
+  list-style: none;
+  margin: 1rem 0;
+  padding: 0;
+}
+ul li {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 4px;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+ul li > div {
+  flex: 1;
+}
+ul li button {
+  margin-left: 0.5rem;
+}
+
+/* Formulare */
+form {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 4px;
+  padding: 2rem;
+  max-width: 600px;
+  margin: 0 auto 2rem;
+}
+form div {
+  margin-bottom: 1rem;
+  text-align: left;
+}
+form label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+form input[type="text"],
+form input[type="email"],
+form input[type="number"],
+form input[type="date"],
+form select {
+  width: 100%;
+  padding: 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+/* Mesaj fallback */
+p {
+  font-style: italic;
+  color: #666;
+  margin-top: 1rem;
 }

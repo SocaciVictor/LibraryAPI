@@ -37,8 +37,8 @@ namespace LibraryAPI.Infrastructure.Repositories
         {
             var booksDb = await _db.Books
                                    .Where(b => (filterBook.Title == null || b.Title.Contains(filterBook.Title))
-                                             && (filterBook.Author == null || b.Author.Equals(filterBook.Author))
-                                             && (filterBook.PublishedDate == null || b.PublishedDate == filterBook.PublishedDate))
+                                             && (filterBook.AuthorId == null || b.AuthorId == filterBook.AuthorId)
+                                             && (filterBook.PublishedDate == null || b.PublishedDate.Value.Date == filterBook.PublishedDate.Value.Date))
                                    .ToListAsync();
             var books = _mapper.Map<List<Book>>(booksDb);
 

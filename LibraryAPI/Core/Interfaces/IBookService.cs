@@ -9,7 +9,7 @@ namespace LibraryAPI.Core.Interfaces
         Task<Result<Book>> CreateAsync(Book b);
         Task<Book?> GetByIdAsync(int id);
         Task<List<Book>> SearchAsync(FilterBook filterBook);
-        Task<Result> UpdateAsync(Book b);
+        Task<Result> UpdateAsync(Book b, string authorName);
         Task<Result> DeleteByIdAsync(int id);
     }
 }

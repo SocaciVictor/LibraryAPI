@@ -60,10 +60,12 @@ namespace LibraryAPI.Services
            return await _bookRepository.SearchAsync(filterBook);
         }
 
-        public async Task<Result> UpdateAsync(Book b)
+        public async Task<Result> UpdateAsync(Book b, string authorName)
         {
             var result = new Result<Book>();
             var existingBook = await _bookRepository.GetByIdAsync(b.Id);
+            var idAuthor = await _authorRepository.GetByNameAsync(authorName);
+            b.AuthorId = idAuthor.Id;
             if (existingBook == null)
             {
                 result.Errors.Add($"Book with id: {b.Id} was not found!");

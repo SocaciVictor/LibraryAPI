@@ -4,6 +4,7 @@ using LibraryAPI.Core.Models;
 using LibraryAPI.Presentation.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
+using System.Xml;
 
 namespace LibraryAPI.Presentation.Controllers
 {
@@ -82,7 +83,7 @@ namespace LibraryAPI.Presentation.Controllers
         {
             var toUpdate = _mapper.Map<Book>(dto);
             toUpdate.Id = id;
-            var result = await _service.UpdateAsync(toUpdate);
+            var result = await _service.UpdateAsync(toUpdate, dto.Author);
             if (result.HasErrors)
                 return BadRequest(result.Errors);
 

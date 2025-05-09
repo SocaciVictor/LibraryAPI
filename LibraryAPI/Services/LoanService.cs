@@ -29,6 +29,11 @@ namespace LibraryAPI.Services
             return result;
         }
 
+        public async Task<List<Loan>> GetAllAsync()
+        {
+            return await _loanRepository.GetLoans();
+        }
+
         public async Task<Loan?> GetByIdAsync(int loanId)
         {
             return await _loanRepository.GetByIdAsync(loanId);

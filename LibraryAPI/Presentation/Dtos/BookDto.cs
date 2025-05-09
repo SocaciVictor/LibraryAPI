@@ -4,6 +4,7 @@
         int Id = default,
         string Title = "",
         int AuthorId = default,
-        int Quantity = default
+        int Quantity = default,
+        DateTime? PublishedDate = null
     );
 }

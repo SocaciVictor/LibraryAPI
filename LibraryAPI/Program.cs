@@ -1,4 +1,4 @@
-using LibraryAPI.Core.Interfaces;
+﻿using LibraryAPI.Core.Interfaces;
 using LibraryAPI.Infrastructure.Context;
 using LibraryAPI.Infrastructure.Repositories;
 using LibraryAPI.Presentation.Mappings;
@@ -6,6 +6,18 @@ using LibraryAPI.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: "AllowLocalFrontend", policy =>
+    {
+        policy
+          .WithOrigins("http://localhost:5173")   
+          .AllowAnyHeader()                         
+          .AllowAnyMethod()                        
+          .AllowCredentials();                     
+    });
+});
+
 
 
 var connStr = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -44,6 +56,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("AllowLocalFrontend");
+
 app.UseAuthorization();
 app.MapControllers();
 

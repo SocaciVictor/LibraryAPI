@@ -26,6 +26,22 @@ namespace LibraryAPI.Presentation.Controllers
             _mapper = mapper;
         }
 
+        // *** Noul endpoint GET all ***
+        /// <summary>
+        /// Retrieves all loans.
+        /// </summary>
+        /// <returns>200 OK with list of <see cref="LoanDto"/></returns>
+        [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<LoanDto>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<LoanDto>>> GetAll()
+        {
+            var loans = await _service.GetAllAsync();
+            // mapăm lista de Loan (model) la LoanDto
+            var dtos = _mapper.Map<IEnumerable<LoanDto>>(loans);
+            return Ok(dtos);
+        }
+
+
         /// <summary>
         /// Borrows a copy of the specified book.
         /// </summary>
