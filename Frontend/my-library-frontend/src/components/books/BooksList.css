@@ -1,0 +1,56 @@
+.books-list {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.books-list header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.filters {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.filters label {
+  display: flex;
+  flex-direction: column;
+  font-weight: bold;
+}
+
+.filters input {
+  padding: 0.3rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.filters button {
+  align-self: flex-end;
+  padding: 0.4rem 0.8rem;
+}
+
+.books-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.books-table th,
+.books-table td {
+  border: 1px solid #ddd;
+  padding: 0.6rem;
+  text-align: left;
+}
+
+.books-table th {
+  background-color: #f0f0f0;
+}
+
+.actions button {
+  margin-right: 0.5rem;
+}

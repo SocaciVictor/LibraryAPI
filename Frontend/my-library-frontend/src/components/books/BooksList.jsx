@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../../api/client";
+import "./BooksList.css";
 
 export default function BooksList() {
   const nav = useNavigate();
@@ -10,73 +11,102 @@ export default function BooksList() {
   const [title, setTitle] = useState("");
   const [publishedDate, setPublishedDate] = useState("");
 
-  const [items, setItems] = useState([]);
+  // datele principale
+  const [books, setBooks] = useState([]);
+  const [loans, setLoans] = useState([]);
 
-  function load() {
+  // încarcă books + loans
+  const load = () => {
     const filters = {};
+    if (authorId.trim() !== "") filters.authorId = Number(authorId);
+    if (title.trim() !== "") filters.title = title;
+    if (publishedDate) filters.publishedDate = publishedDate;
 
-    if (authorId.trim() !== "") {
-      filters.authorId = Number(authorId);
-    }
-    if (title.trim() !== "") {
-      filters.title = title;
-    }
-    if (publishedDate) {
-      filters.publishedDate = publishedDate;
-    }
+    api.getBooks(filters).then(setBooks).catch(console.error);
+    api.getLoans().then(setLoans).catch(console.error);
+  };
 
-    api
-      .getBooks(filters)
-      .then(setItems)
-      .catch((err) => console.error(err));
-  }
-
-  useEffect(load, []); // la mount, fără filtre
+  useEffect(load, []);
 
   return (
-    <div>
-      <h2>Books</h2>
-      <button onClick={() => nav("/books/create")}>New Book</button>
-      <h4>Filter</h4>
-      <label>
-        Author ID:{" "}
-        <input value={authorId} onChange={(e) => setAuthorId(e.target.value)} />
-      </label>{" "}
-      <label>
-        Title:{" "}
-        <input value={title} onChange={(e) => setTitle(e.target.value)} />
-      </label>{" "}
-      <label>
-        Published Date:{" "}
-        <input
-          type="date"
-          value={publishedDate}
-          onChange={(e) => setPublishedDate(e.target.value)}
-        />
-      </label>{" "}
-      <button onClick={load}>Search</button>
-      <ul>
-        {items.map((b) => (
-          <li key={b.id}>
-            <strong>{b.title}</strong> (Author #{b.authorId}) —{" "}
-            <span>Quantity: {b.quantity}</span> —{" "}
-            <span>Published: {b.publishedDate?.slice(0, 10) || "—"}</span>{" "}
-            <button onClick={() => nav(`/books/edit/${b.id}`)}>Edit</button>{" "}
-            <button
-              onClick={() => {
-                if (!confirm("Ștergi cartea?")) return;
-                api
-                  .deleteBook(b.id)
-                  .then(() =>
-                    setItems((prev) => prev.filter((x) => x.id !== b.id))
-                  );
-              }}
-            >
-              Delete
-            </button>
-          </li>
-        ))}
-      </ul>
+    <div className="books-list">
+      <header>
+        <h2>Books</h2>
+        <button onClick={() => nav("/books/create")}>New Book</button>
+      </header>
+
+      <div className="filters">
+        <label>
+          Author ID:
+          <input
+            value={authorId}
+            onChange={(e) => setAuthorId(e.target.value)}
+          />
+        </label>
+        <label>
+          Title:
+          <input value={title} onChange={(e) => setTitle(e.target.value)} />
+        </label>
+        <label>
+          Published:
+          <input
+            type="date"
+            value={publishedDate}
+            onChange={(e) => setPublishedDate(e.target.value)}
+          />
+        </label>
+        <button onClick={load}>Search</button>
+      </div>
+
+      <table className="books-table">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Author ID</th>
+            <th>Total Quantity</th>
+            <th>Active Loans</th>
+            <th>Available</th>
+            <th>Published</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {books.map((b) => {
+            const activeLoans = loans.filter(
+              (l) => l.bookId === b.id && l.returnedAt == null
+            ).length;
+            const available = b.quantity - activeLoans;
+
+            return (
+              <tr key={b.id}>
+                <td>{b.title}</td>
+                <td>{b.authorId}</td>
+                <td>{b.quantity}</td>
+                <td>{activeLoans}</td>
+                <td>{available}</td>
+                <td>{b.publishedDate?.slice(0, 10) || "—"}</td>
+                <td className="actions">
+                  <button onClick={() => nav(`/books/edit/${b.id}`)}>
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => {
+                      if (!confirm("Ștergi cartea?")) return;
+                      api
+                        .deleteBook(b.id)
+                        .then(() =>
+                          setBooks((prev) => prev.filter((x) => x.id !== b.id))
+                        );
+                    }}
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
     </div>
   );
 }

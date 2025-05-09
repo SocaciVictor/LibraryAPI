@@ -7,22 +7,25 @@ export default function BookForm() {
   const isNew = !id;
   const nav = useNavigate();
 
-  // stări pentru formular
+  // stări form
   const [title, setTitle] = useState("");
   const [authorId, setAuthorId] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [publishedDate, setPublishedDate] = useState("");
 
-  // stări pentru listă + filtrare autori
+  // stări suport: autori + împrumuturi
   const [authors, setAuthors] = useState([]);
   const [authorFilter, setAuthorFilter] = useState("");
+  const [loans, setLoans] = useState([]);
 
   useEffect(() => {
-    // încărcăm toți autorii o singură dată
+    // încărcăm autorii
     api.getAuthors().then(setAuthors).catch(console.error);
+    // încărcăm împrumuturile
+    api.getLoans().then(setLoans).catch(console.error);
 
     if (!isNew) {
-      // la edit, încărcăm datele cărții
+      // date pentru edit
       api
         .getBook(id)
         .then((b) => {
@@ -38,7 +41,7 @@ export default function BookForm() {
   function onSave() {
     const dto = {
       title,
-      authorId: +authorId, // trimitem ID-ul numeric
+      authorId: +authorId,
       quantity: +quantity,
       publishedDate,
     };
@@ -50,15 +53,24 @@ export default function BookForm() {
     });
   }
 
-  // filtrăm autorii după textul introdus
+  // filtrăm autorii
   const filteredAuthors = authors.filter((a) =>
     a.name.toLowerCase().includes(authorFilter.toLowerCase())
   );
+
+  // calculăm câte împrumuturi active are cartea (doar în edit)
+  const activeLoans = !isNew
+    ? loans.filter((l) => l.bookId === +id && l.returnedAt == null).length
+    : 0;
+
+  // calculăm câte exemplare mai sunt disponibile
+  const available = quantity - activeLoans;
 
   return (
     <div style={{ maxWidth: 600, margin: "0 auto" }}>
       <h2>{isNew ? "Create" : "Edit"} Book</h2>
 
+      {/* Title */}
       <div style={{ marginBottom: "1rem", textAlign: "left" }}>
         <label>
           Title:
@@ -71,6 +83,7 @@ export default function BookForm() {
         </label>
       </div>
 
+      {/* Author search + select */}
       <div style={{ marginBottom: "1rem", textAlign: "left" }}>
         <label>
           Search Author:
@@ -99,18 +112,27 @@ export default function BookForm() {
         </label>
       </div>
 
+      {/* Quantity + disponibilitate */}
       <div style={{ marginBottom: "1rem", textAlign: "left" }}>
         <label>
           Quantity:
           <input
             type="number"
+            min="0"
             value={quantity}
             onChange={(e) => setQuantity(e.target.value)}
             style={{ width: "100%", padding: "0.5rem" }}
           />
         </label>
+        {!isNew && (
+          <p style={{ marginTop: "0.5rem" }}>
+            Active loans: <strong>{activeLoans}</strong> <br />
+            Available: <strong>{available}</strong>
+          </p>
+        )}
       </div>
 
+      {/* Published Date */}
       <div style={{ marginBottom: "1rem", textAlign: "left" }}>
         <label>
           Published Date:
@@ -123,7 +145,11 @@ export default function BookForm() {
         </label>
       </div>
 
-      <button onClick={onSave} disabled={!title || !authorId}>
+      {/* Actions */}
+      <button
+        onClick={onSave}
+        disabled={!title || !authorId || (!isNew && available < 0)}
+      >
         Save
       </button>
       <button onClick={() => nav(-1)} style={{ marginLeft: 8 }}>
