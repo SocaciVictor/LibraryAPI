@@ -163,9 +163,13 @@ npm run dev
 
 ---
 
-7.New Funtionality Development explain:
-As a new feature, I implemented SMTP email notifications that send messages to the administrator whenever a new loan is created and whenever a book is returned, keeping the admin informed about the library’s books.
+## 7. New Functionality Development
 
-You need to change the const Email to receive those email notifications.
-![Alt text descriptiv](images/ss1.png)
-![Alt text descriptiv](images/ss2.png)
+As a new feature, I implemented SMTP email notifications that send messages to the administrator
+whenever a new loan is created and whenever a book is returned, keeping the admin informed about
+the library’s books.
+
+You need to change the `const Email` to receive those email notifications.
+
+![LoansList.jsx](images/ss1.png)
+![LoanForm.jsx](images/ss2.png)
