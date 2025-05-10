@@ -53,10 +53,11 @@ namespace LibraryAPI.Presentation.Controllers
         [HttpPost]
         [ProducesResponseType(typeof(LoanDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> Borrow([FromBody] LoanRequestDto request)
+        public async Task<ActionResult> Borrow([FromBody] LoanRequestDto request ,
+                                               [FromHeader(Name = "X-Notify-Email")] string notifyEmail)
         {
             var loan = _mapper.Map<Loan>(request);
-            var result = await _service.BorrowAsync(loan);
+            var result = await _service.BorrowAsync(loan, notifyEmail);
             if (result.HasErrors)
                 return BadRequest(result.Errors);
 
@@ -75,9 +76,10 @@ namespace LibraryAPI.Presentation.Controllers
         [HttpPost("{loanId:int}/return")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Return(int loanId)
+        public async Task<IActionResult> Return(int loanId, 
+                                                [FromHeader(Name = "X-Notify-Email")] string notifyEmail)
         {
-            var result = await _service.ReturnAsync(loanId);
+            var result = await _service.ReturnAsync(loanId, notifyEmail);
             if (result.HasErrors)
                 return BadRequest(result.Errors);
 

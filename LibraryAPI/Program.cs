@@ -39,6 +39,7 @@ builder.Services.AddAutoMapper(typeof(BookProfile),
                                typeof(LoanProfile));
 
 builder.Services.AddScoped<IBookService, BookService>();
+builder.Services.AddTransient<IEmailSender, SmtpEmailSender>();
 builder.Services.AddScoped<ILoanService, LoanService>();
 builder.Services.AddScoped<IBookRepository, BookRepository>();
 builder.Services.AddScoped<ILoanRepository, LoanRepository>();
