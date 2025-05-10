@@ -28,7 +28,7 @@ export default function LoanForm() {
     };
 
     api
-      .createLoan(dto)
+      .createLoan(dto, "socaci.victor@yahoo.com")
       .then(() => nav("/loans"))
       .catch((err) => {
         console.error("Borrow failed", err);

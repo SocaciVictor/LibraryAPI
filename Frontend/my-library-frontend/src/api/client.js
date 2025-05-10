@@ -37,13 +37,25 @@ export const api = {
   // Loans
   getLoans: () => request(`/Loans`),
   getLoan: (id) => request(`/Loans/${id}`),
-  createLoan: (l) =>
-    request(`/Loans`, { method: "POST", body: JSON.stringify(l) }),
+  createLoan: (loanDto, notifyEmail) =>
+    request(`/Loans`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Notify-Email": notifyEmail,
+      },
+      body: JSON.stringify(loanDto),
+    }),
   updateLoan: (id, l) =>
     request(`/Loans/${id}`, { method: "PUT", body: JSON.stringify(l) }),
   deleteLoan: (id) => request(`/Loans/${id}`, { method: "DELETE" }),
-  returnLoan: (loanId) =>
-    request(`/Loans/${loanId}/return`, { method: "POST" }), // <<< nou
+  returnLoan: (loanId, notifyEmail) =>
+    request(`/Loans/${loanId}/return`, {
+      method: "POST",
+      headers: {
+        "X-Notify-Email": notifyEmail,
+      },
+    }),
 
   // Users
   getUsers: () => request(`/Users`),

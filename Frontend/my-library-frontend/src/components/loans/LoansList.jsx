@@ -26,7 +26,7 @@ export default function LoansList() {
   function onReturn(id) {
     if (!window.confirm("Marchezi acest împrumut ca returnat?")) return;
     api
-      .returnLoan(id)
+      .returnLoan(id, "socaci.victor@yahoo.com")
       .then(() => loadLoans())
       .catch((err) => {
         console.error("Return failed:", err);
