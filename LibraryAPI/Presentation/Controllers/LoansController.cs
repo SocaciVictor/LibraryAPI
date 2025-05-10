@@ -105,5 +105,42 @@ namespace LibraryAPI.Presentation.Controllers
 
             return Ok(_mapper.Map<LoanDto>(loan));
         }
+
+        /// <summary>
+        /// Deletes (logical) a user by id.
+        /// </summary>
+        [HttpDelete("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var result = await _service.Delete(id);
+            if (result.HasErrors)
+                return NotFound(result.Errors);
+
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Updates an existing loan.
+        /// </summary>
+        /// <param name="id">Loan identifier.</param>
+        /// <param name="dto">Updated loan data.</param>
+        [HttpPut("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Update(int id, [FromBody] LoanDto dto)
+        {
+            if(dto.ReturnedAt == null)
+                return BadRequest("ReturnedAt cannot be null");
+            var toUpdate = _mapper.Map<Loan>(dto);
+            toUpdate.Id = id;
+            var result = await _service.UpdateAsync(toUpdate);
+            if (result.HasErrors)
+                return BadRequest(result.Errors);
+
+            return NoContent();
+        }
+
     }
 }

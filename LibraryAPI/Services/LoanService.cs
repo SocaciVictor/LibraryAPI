@@ -3,6 +3,7 @@ using LibraryAPI.Core.Helper;
 using LibraryAPI.Core.Interfaces;
 using LibraryAPI.Core.Models;
 using LibraryAPI.Infrastructure.Entities;
+using LibraryAPI.Infrastructure.Repositories;
 using LibraryAPI.Presentation.Dtos;
 
 namespace LibraryAPI.Services
@@ -39,6 +40,18 @@ namespace LibraryAPI.Services
             return result;
         }
 
+        public async Task<Result> Delete(int id)
+        {
+            var result = new Result();
+            var isDeleted = await _loanRepository.DeleteAsync(id);
+            if (isDeleted == false)
+            {
+                result.Errors.Add($"Loan with id: {id} was not found!");
+            }
+
+            return result;
+        }
+
         public async Task<List<Loan>> GetAllAsync()
         {
             return await _loanRepository.GetLoans();
@@ -72,6 +85,34 @@ namespace LibraryAPI.Services
             await _emailSender.SendAsync(notifyEmail, "Library: Loan Returned", body);
             loan.ReturnedAt = DateTime.UtcNow;
             await _loanRepository.UpdateAsync(loan);
+
+            return result;
+        }
+
+        public async Task<Result> UpdateAsync(Loan toUpdate)
+        {
+            var result = new Result();
+            var loan = await _loanRepository.GetByIdAsync(toUpdate.Id);
+            if (loan is null)
+            {
+                result.Errors.Add($"Loan with id: {toUpdate.Id} was not found!");
+                return result;
+            }
+            if (toUpdate.LoanedAt > DateTime.UtcNow)
+            {
+                result.Errors.Add($"LoanedAt date cannot be in the future.");
+                return result;
+            }
+            if (toUpdate.ReturnedAt != null && toUpdate.ReturnedAt < toUpdate.LoanedAt)
+            {
+                result.Errors.Add($"ReturnedAt date cannot be before LoanedAt date.");
+                return result;
+            }
+            if (result.HasErrors)
+            {
+                return result;
+            }
+            await _loanRepository.UpdateAsync(toUpdate);
 
             return result;
         }

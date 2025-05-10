@@ -9,7 +9,7 @@ namespace LibraryAPI.Core.Interfaces
         Task<Loan?> GetByIdAsync(int id);
         Task<List<Loan>?> GetLoans();
         Task<bool> UpdateAsync(Loan book);
-        Task<bool> DeleteAsync(Loan id);
+        Task<bool> DeleteAsync(int id);
         Task<int> CountActiveByBookIdAsync(int bookId);
     }
 }

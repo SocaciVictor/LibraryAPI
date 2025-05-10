@@ -22,8 +22,11 @@ namespace LibraryAPI.Infrastructure.Context
             modelBuilder.Entity<LoanDb>()
                 .HasQueryFilter(l => !l.IsDeleted);
 
+            modelBuilder.Entity<UserDb>()
+                .HasQueryFilter(l => !l.IsDeleted);
 
-         
+
+
             modelBuilder.Entity<BookDb>()
                 .HasOne(b => b.Author)
                 .WithMany(a => a.Books)

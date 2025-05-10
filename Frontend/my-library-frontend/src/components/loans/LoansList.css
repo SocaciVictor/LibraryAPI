@@ -1,0 +1,29 @@
+.loans-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.loans-list li {
+  display: grid;
+  grid-template-columns: 2fr auto auto;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+  background: #fff;
+}
+
+/* opțional: împinge butoanele Delete/Return la dreapta într-un grup */
+.loan-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* spațiu între coloane de butoane și informații */
+.loans-list li > button,
+.loans-list li .loan-actions button {
+  /* butoanele moștenesc stilul global */
+}

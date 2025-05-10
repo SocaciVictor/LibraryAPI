@@ -25,7 +25,7 @@ namespace LibraryAPI.Infrastructure.Repositories
                 .CountAsync(l => l.BookId == bookId && l.ReturnedAt == null && !l.IsDeleted);
         }
 
-        public async Task<bool> DeleteAsync(Loan id)
+        public async Task<bool> DeleteAsync(int id)
         {
             var loanDb = await _db.Loans.FindAsync(id);
             if(loanDb == null)

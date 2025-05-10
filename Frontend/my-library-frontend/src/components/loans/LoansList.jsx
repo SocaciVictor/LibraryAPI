@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../../api/client";
+import "./LoansList.css"; // importă stilurile
 
 export default function LoansList() {
   const [items, setItems] = useState([]);
   const nav = useNavigate();
+  const Email = "socaci.victor@yahoo.com";
 
   const loadLoans = () => {
     api
@@ -19,23 +21,20 @@ export default function LoansList() {
     if (!window.confirm("Ștergi împrumutul?")) return;
     api
       .deleteLoan(id)
-      .then(() => loadLoans())
+      .then(loadLoans)
       .catch((err) => console.error("Delete failed:", err));
   }
 
   function onReturn(id) {
     if (!window.confirm("Marchezi acest împrumut ca returnat?")) return;
     api
-      .returnLoan(id, "socaci.victor@yahoo.com")
-      .then(() => loadLoans())
-      .catch((err) => {
-        console.error("Return failed:", err);
-        alert("Nu s-a putut înregistra returnarea.");
-      });
+      .returnLoan(id, Email)
+      .then(loadLoans)
+      .catch((err) => alert("Return failed: " + err));
   }
 
   return (
-    <div>
+    <div className="loans-list">
       <h2>Loans</h2>
       <button onClick={() => nav("/loans/create")}>New Loan</button>
 
@@ -45,14 +44,21 @@ export default function LoansList() {
         <ul>
           {items.map((l) => (
             <li key={l.id}>
-              Loan #{l.id} – User #{l.userId} – Book #{l.bookId} <br />
-              Loaned: {l.loanedAt.slice(0, 10)} – Returned:{" "}
-              {l.returnedAt ? l.returnedAt.slice(0, 10) : "—"}{" "}
-              <button onClick={() => nav(`/loans/edit/${l.id}`)}>Edit</button>{" "}
-              <button onClick={() => onDelete(l.id)}>Delete</button>{" "}
-              {l.returnedAt == null && (
-                <button onClick={() => onReturn(l.id)}>Return</button>
-              )}
+              {/* 1. Detalii împrumut */}
+              <div className="loan-info">
+                Loan #{l.id} – User #{l.userId} – Book #{l.bookId}— Loaned:{" "}
+                {l.loanedAt.slice(0, 10)}— Returned:{" "}
+                {l.returnedAt ? l.returnedAt.slice(0, 10) : "—"}
+              </div>
+              {/* 2. Edit */}
+              <button onClick={() => nav(`/loans/edit/${l.id}`)}>Edit</button>
+              {/* 3. Delete și Return */}
+              <div className="loan-actions">
+                <button onClick={() => onDelete(l.id)}>Delete</button>
+                {l.returnedAt == null && (
+                  <button onClick={() => onReturn(l.id)}>Return</button>
+                )}
+              </div>
             </li>
           ))}
         </ul>
