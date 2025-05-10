@@ -42,13 +42,15 @@ cd LibraryAPI
 
 #### Backend Configuration
 
-1. In `Presentation/appsettings.json`, set your MySQL connection string:
+1. In `appsettings.json`, set your MySQL connection string:
 
    ```jsonc
    "ConnectionStrings": {
-     "DefaultConnection": "Server=localhost;Database=library;User=root;Password=your_password;"
+     "DefaultConnection": "Server=localhost;Database=library;User=your_username;Password=your_password;"
    }
    ```
+
+   You need to create in your database a schemas which name is library
 
 2. Configure SMTP for notifications:
 
@@ -74,16 +76,36 @@ dotnet tool install --global dotnet-ef
 
 Run migrations:
 
+1. Open a terminal and change into the **LibraryAPI** project folder (where `LibraryAPI.csproj`, `Program.cs` and the `Migrations/` folder live):
+
+   ```bash
+   cd LibraryAPI
+
+   ```
+
+2. Create your initial migration (only the first time):
+
 ```bash
-dotnet ef database update   --project Infrastructure   --startup-project Presentation
+dotnet ef migrations add InitialCreate
 ```
+
+3. Apply all pending migrations to your database:
+
+```bash
+dotnet ef database update
+
+```
+
+Or
+
+Via Package Manager console from Visual Studio
+
+1. add-migration InitialMigration
+2. update-database
 
 ### 3. Start Backend API
 
-```bash
-cd Presentation
-dotnet run
-```
+If you’re using Visual Studio Code: go to the Run menu at the top and choose Start Debugging or Run Without Debugging.
 
 - The API listens on **https://localhost:7088/**
 - Swagger UI: **https://localhost:7088/swagger**
@@ -124,7 +146,7 @@ npm run dev
 ### Users
 
 - **CRUD**:
-  - `GET /api/users` … `DELETE /api/users/{id}`
+  - `GET /api/users` … `DELETE /api/users/{id}` .. `PUT /api/users/{id}`
 
 ### Loans
 

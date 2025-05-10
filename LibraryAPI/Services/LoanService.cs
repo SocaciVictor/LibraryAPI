@@ -26,7 +26,7 @@ namespace LibraryAPI.Services
                 result.Errors.Add("No copies available for borrowing.");
                 return result;
             }
-            loan.LoanedAt = DateTime.UtcNow;
+            loan.LoanedAt = loan.LoanedAt;
             var created = await _loanRepository.AddAsync(loan);
             result.Data = created;
             var dto = _mapper.Map<LoanDto>(result.Data!);
@@ -112,6 +112,11 @@ namespace LibraryAPI.Services
             {
                 return result;
             }
+            loan.LoanedAt = toUpdate.LoanedAt;
+            loan.ReturnedAt = toUpdate.ReturnedAt;
+            loan.UserId = toUpdate.UserId;
+            loan.BookId = toUpdate.BookId;
+            loan.IsDeleted = toUpdate.IsDeleted;
             await _loanRepository.UpdateAsync(toUpdate);
 
             return result;
