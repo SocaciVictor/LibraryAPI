@@ -4,7 +4,7 @@ A full-stack application for managing a library’s book collection, built with:
 
 - **Backend**: ASP.NET Core Web API (C#), EF Core, MySQL
 - **Frontend**: React + Vite (JavaScript)
-- **Extras**: Swagger UI, email notifications via SMTP, CSV reporting
+- **Extras**: Swagger UI, email notifications via SMTP
 
 ---
 
@@ -62,7 +62,7 @@ cd LibraryAPI
    }
    ```
 
-   You need to enable 2-Step-Verification on gmail and you need to create a app passwords to complete the smtp "Pass". https://myaccount.google.com/apppasswords
+   You need to enable 2-Step-Verification on gmail and you need to create a app passwords to change the value from smtp "Pass". https://myaccount.google.com/apppasswords
 
 ### 2. Apply Database Migrations
 
@@ -151,7 +151,7 @@ npm run dev
   ```
   X-Notify-Email: youremail@domain.com
   ```
-  on `POST /api/loans` and `PUT /api/loans/{id}` or `POST /api/loans/{id}/return`.
+  on `POST /api/loans` and `POST /api/loans/{id}/return`.
 
 ---
 
