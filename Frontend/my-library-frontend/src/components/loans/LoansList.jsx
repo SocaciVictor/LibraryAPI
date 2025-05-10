@@ -6,7 +6,7 @@ import "./LoansList.css"; // importă stilurile
 export default function LoansList() {
   const [items, setItems] = useState([]);
   const nav = useNavigate();
-  const Email = "socaci.victor@yahoo.com";
+  const Email = "youremail@gmail.com"; // email pentru notificări
 
   const loadLoans = () => {
     api

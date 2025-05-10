@@ -6,7 +6,7 @@ export default function LoanForm() {
   const { id } = useParams();
   const isNew = !id;
   const nav = useNavigate();
-  const notifyEmail = "socaci.victor@yahoo.com";
+  const notifyEmail = "youremail@gmail.com";
 
   const [bookId, setBookId] = useState("");
   const [userId, setUserId] = useState("");
