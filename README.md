@@ -167,5 +167,5 @@ npm run dev
 As a new feature, I implemented SMTP email notifications that send messages to the administrator whenever a new loan is created and whenever a book is returned, keeping the admin informed about the library’s books.
 
 You need to change the const Email to receive those email notifications.
-<img src="images/ss1" alt="Library Logo" width="200"/>
-<img src="images/ss2" alt="Library Logo" width="200"/>
+![Alt text descriptiv](images/ss1.png)
+![Alt text descriptiv](images/ss2.png)
